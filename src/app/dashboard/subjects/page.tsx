@@ -1,6 +1,6 @@
 "use client";
 
-import { Book, LibraryBig, UserPlus } from "lucide-react";
+import { Book } from "lucide-react";
 import { Modal } from "../../../components/modal";
 import { ReusableSubjectsForm } from "./create-class";
 import SubjectsTable from "./subjects-table";

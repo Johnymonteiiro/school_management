@@ -2,21 +2,13 @@
 
 import * as React from "react";
 import {
-  AudioWaveform,
   Book,
-  BookOpen,
   Bot,
   ChartArea,
-  Command,
-  Frame,
-  GalleryVerticalEnd,
   GraduationCap,
   Home,
   LibraryBig,
-  Map,
-  PieChart,
   Settings2,
-  SquareTerminal,
   Users,
 } from "lucide-react";
 

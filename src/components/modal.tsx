@@ -27,7 +27,7 @@ export function Modal({ button, title, children }: ModalProps) {
           <span> {button?.label}</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="max-w-[900px] w-full ">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>

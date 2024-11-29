@@ -1,11 +1,9 @@
-import { SearchForm } from "@/components/search-form";
+
 import { UserPlus, GraduationCap } from "lucide-react";
 import { Modal } from "../../../components/modal";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { TableContent } from "@/components/table";
 import { DataTableDemo } from "@/components/table_2";
 import { ReusableStudentForm } from "./create-student";
+import StudentsTable from "./student-table";
 
 export default function Students() {
   return (
@@ -19,6 +17,7 @@ export default function Students() {
 
           <div className="flex items-center">
             <Modal
+              title="New student"
               button={{
                 icon: UserPlus,
                 label: "New Student",
@@ -29,7 +28,7 @@ export default function Students() {
           </div>
         </div>
 
-        <DataTableDemo />
+        <StudentsTable />
       </div>
     </div>
   );
