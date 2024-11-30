@@ -1,15 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Bot, ArrowUp, User } from "lucide-react";
-import {
-  useOptimistic,
-  useRef,
-  useEffect,
-  useState,
-  startTransition,
-} from "react";
+import { GrDocumentPerformance } from "react-icons/gr";
+import { AiOutlineMessage } from "react-icons/ai";
+import { BiAnalyse } from "react-icons/bi";
+import { MdContactSupport } from "react-icons/md";
+import { Bot, ArrowUp, User, ShieldHalf } from "lucide-react";
+import { useRef, useEffect, useState, startTransition } from "react";
 
 type Message = {
   message: string;
@@ -17,7 +14,7 @@ type Message = {
 };
 
 export default function Analytics() {
-  const [messages, setMessages] = useState<Message[]>([]); // Estado local para mensagens
+  const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
@@ -35,7 +32,6 @@ export default function Analytics() {
     const userMessage = formData.get("message") as string;
     if (!userMessage) return;
 
-    // Adiciona a mensagem do usuário ao estado
     startTransition(() => {
       setMessages((prev) => [
         ...prev,
@@ -46,20 +42,26 @@ export default function Analytics() {
     setIsLoading(true);
 
     try {
-      // Faz a chamada para a API (simulação abaixo)
-      // const response = await fetch("/api/ai-response", {
-      //   method: "POST",
-      //   body: JSON.stringify({ message: userMessage }),
-      //   headers: { "Content-Type": "application/json" },
-      // });
-
-      // const data = await response.json();
-
-      // Adiciona a resposta da API ao estado
       startTransition(() => {
         setMessages((prev) => [
           ...prev,
-          { message: "Hi there !", sender: "bot" },
+          {
+            message: `Identify At-Risk Students
+Use the assistant to analyze patterns in attendance, grades, and behavior to detect students who may be at risk of dropping out, enabling early intervention.
+
+Monitor Academic Performance
+Leverage the assistant to track key metrics like grades, participation, and presence, providing insights into students' academic progress over time.
+
+Support Decision-Making
+Aid school administrators in making informed decisions by presenting structured data analysis and suggesting tailored action plans to address challenges.
+
+Improve Resource Allocation
+Use insights from the assistant to prioritize resources and interventions for students or groups requiring immediate support.
+
+Facilitate Communication
+Share data-driven reports with teachers and parents to create collaborative strategies for improving student outcomes and reducing dropout rates.`,
+            sender: "bot",
+          },
         ]);
       });
     } catch (error) {
@@ -77,7 +79,6 @@ export default function Analytics() {
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4">
-      {/* Painel principal */}
       <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 p-4">
         <div className="flex justify-between items-center">
           <div className="flex items-center">
@@ -86,13 +87,36 @@ export default function Analytics() {
           </div>
         </div>
 
-        <div className="flex items-center justify-evenly w-full mt-10">
+        <div className="flex justify-evenly w-full mt-10">
           <div>
-            <h3>You can analyze all data for any student</h3>
+            <h1 className="text-zinc-900 font-bold text-2xl mb-8">
+              Analyzing student data <br /> and identifying patterns of dropout
+              risk
+            </h1>
+            <div className="border-l pl-4">
+              <div className="flex items-center pb-4">
+                <ShieldHalf className="stroke-blue-500" />
+                <h3 className="text-base pl-2">Identify At-Risk Students</h3>
+              </div>
+              <div className="flex items-center pb-4">
+                <GrDocumentPerformance size={20} className="stroke-blue-500" />
+                <h3 className="text-base pl-2">Monitor Academic Performance</h3>
+              </div>
+              <div className="flex items-center pb-4">
+                <MdContactSupport size={22} className="fill-blue-500" />
+                <h3 className="text-base pl-2">Support Decision-Making</h3>
+              </div>
+              <div className="flex items-center pb-4">
+                <BiAnalyse size={20} className="fill-blue-500" />
+                <h3 className="text-base pl-2">Improve Resource Allocation</h3>
+              </div>
+              <div className="flex items-center">
+                <AiOutlineMessage size={20} className="fill-blue-500" />
+                <h3 className="text-base pl-2">Facilitate Communication</h3>
+              </div>
+            </div>
           </div>
-
           <div className="rounded px-4 pt-10 border w-[600px] h-[700px] box-border relative flex flex-col bg-white">
-            {/* Mensagens */}
             <div className="flex-1 overflow-y-auto space-y-6 p-4">
               {messages?.map((m, i) => (
                 <div
@@ -102,28 +126,32 @@ export default function Analytics() {
                   }`}
                 >
                   <div
-                    className={`flex items-center gap-2 ${
+                    className={`flex  gap-2 ${
                       m.sender === "user" ? "flex-row-reverse" : ""
                     }`}
                   >
                     {m.sender === "bot" ? (
-                      <div className="flex items-center border p-1 bg-blue-500 shadow-2xl justify-center rounded-full">
-                        <Bot size={30} className="stroke-zinc-100" />
+                      <div>
+                        <div className="flex items-center border p-1 bg-blue-500 shadow-2xl justify-center rounded-full">
+                          <Bot size={30} className="stroke-zinc-100" />
+                        </div>
                       </div>
                     ) : (
-                      <div className="flex items-center border p-1 bg-zinc-800 shadow-2xl justify-center rounded-full">
-                        <User size={30} className="stroke-zinc-100" />
+                      <div>
+                        <div className="flex items-center border p-1 bg-zinc-800 shadow-2xl justify-center rounded-full">
+                          <User size={30} className="stroke-zinc-100" />
+                        </div>
                       </div>
                     )}
-                    <p
-                      className={`px-4 py-2 rounded-lg shadow-md ${
+                    <div
+                      className={`px-4 py-2 rounded-lg shadow max-w-[100%] ${
                         m.sender === "user"
                           ? "bg-gray-200 text-gray-700"
-                          : "bg-blue-100 text-blue-800"
+                          : "bg-[#f8fdff] text-zinc-700"
                       }`}
                     >
                       {m.message}
-                    </p>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -135,17 +163,13 @@ export default function Analytics() {
                     </div>
                   </div>
                   <p className="px-4 py-2 rounded-lg shadow-sm bg-blue-50 text-blue-800">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Illo, accusantium culpa! Rem hic et aliquid quo repudiandae
-                    eius a pariatur iure vero quidem corporis voluptates,
-                    similique possimus, in quaerat tempore?
+                    Loading...
                   </p>
                 </div>
               )}
               <div ref={chatEndRef}></div>
             </div>
 
-            {/* Campo de entrada */}
             <div className="absolute bottom-4 left-4 right-4">
               <form
                 onSubmit={(e) => {
@@ -156,10 +180,16 @@ export default function Analytics() {
                 }}
                 className="flex items-center gap-2 w-full bg-gray-50 p-2 rounded-lg shadow-md"
               >
-                <Input
+                <input
                   name="message"
-                  className="flex-1 border-none shadow-none focus:ring-0 focus:outline-none"
+                  // rows={1}
+                  className="flex-1 resize-none border-none shadow-none focus:ring-0 focus:outline-none overflow-hidden bg-gray-50 text-gray-700 px-3 py-2 rounded-lg"
                   placeholder="Type your question or request..."
+                  onInput={(e) => {
+                    const target = e.target as HTMLTextAreaElement;
+                    target.style.height = "auto";
+                    target.style.height = target.scrollHeight + "px";
+                  }}
                 />
                 <Button
                   type="submit"
