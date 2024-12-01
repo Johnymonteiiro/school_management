@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { z } from "zod";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,14 +9,14 @@ import { DialogClose } from "@/components/ui/dialog";
 import { DatePicker } from "@/components/calendar_data";
 import { InputField, InputMask } from "@/components/inputField";
 import { SelectOptions } from "@/components/select-item";
-import { createStudent } from "@/app/actions";
+import {  GetProfile, UpdateStudent } from "@/app/actions";
 import { toast } from "sonner";
 
-const studentSchema = z.object({
+ const studentSchema = z.object({
   nome: z
     .string()
     .min(3, "Nome é obrigatório e deve ter pelo menos 3 caracteres."),
-  genero: z.string().min(1, "A serie é obrigatório."),
+  genero: z.string().min(1, "O gênero é obrigatório."),
   cpf: z
     .string()
     .regex(
@@ -29,7 +29,6 @@ const studentSchema = z.object({
       (date) => date <= new Date(),
       "Data de nascimento não pode ser no futuro."
     ),
-  serie: z.string().min(1, "A serie é obrigatório."),
   endereco: z.string().min(5, "Endereço é obrigatório."),
   nomeResponsavel: z.string().min(3, "Nome do responsável é obrigatório."),
   telefoneResponsavel: z
@@ -42,36 +41,61 @@ const studentSchema = z.object({
 
 export type StudentFormData = z.infer<typeof studentSchema>;
 
-export function ReusableStudentForm() {
+type ResponseData = {
+  cpf: string;
+  data_nascimento: string;
+  endereco: string;
+  genero: "Masculino" | "Feminino";
+  nome: string;
+  nome_responsavel: string;
+  telefone_responsavel: string;
+};
+
+export function EditStudentForm({ id_aluno }: { id_aluno: number }) {
+  const [defaultValues, setDefaultValues] = useState<StudentFormData>();
+
+  useEffect(() => {
+    async function fetchData() {
+      const data: ResponseData = await GetProfile(`alunos/${id_aluno}`);
+      setDefaultValues({
+        nome: data.nome,
+        cpf: data.cpf,
+        genero: data.genero,
+        dataNascimento: new Date(data.data_nascimento), // Converter para Date
+        endereco: data.endereco,
+        nomeResponsavel: data.nome_responsavel,
+        telefoneResponsavel: data.telefone_responsavel,
+      });
+    }
+    fetchData();
+  }, [id_aluno]);
+
   const methods = useForm<StudentFormData>({
     resolver: zodResolver(studentSchema),
-    defaultValues: {
-      nome: "",
-      cpf: "",
-      genero: "",
-      dataNascimento: undefined,
-      serie: "",
-      endereco: "",
-      nomeResponsavel: "",
-      telefoneResponsavel: "",
-    },
+    defaultValues,
   });
 
   const { handleSubmit, reset, watch, setValue, formState } = methods;
 
+  useEffect(() => {
+    if (defaultValues) {
+      reset(defaultValues);
+    }
+  }, [defaultValues, reset]);
+
   const handleFormSubmit = async (data: StudentFormData) => {
     try {
-      const res = await createStudent(data);
+      const res = await UpdateStudent(data, id_aluno);
 
       if (res.status === 201) {
-        toast.success(res.message);
+         toast.success(res.message);
         reset();
       } else {
-        toast.error(res.message || "Failed to create student.");
+        toast.error(res.message || "Falha ao salvar os dados.");
       }
     } catch (error) {
-      console.error("Error submitting form:", error);
-      toast.error("An unexpected error occurred. Please try again.");
+      console.error("Erro ao enviar o formulário:", error);
+      toast.error("Ocorreu um erro inesperado. Tente novamente.");
     }
   };
 
@@ -86,22 +110,15 @@ export function ReusableStudentForm() {
           />
 
           <div className="flex flex-col w-full ml-1">
-            <label htmlFor="ano" className="mb-2 text-base">
-              Genero <span className="text-red-500">*</span>
+            <label htmlFor="genero" className="mb-2 text-base">
+              Gênero <span className="text-red-500">*</span>
             </label>
             <SelectOptions
               onValueChange={(value) =>
                 setValue("genero", value, { shouldValidate: true })
               }
-              placeholder="Selecione o ano"
-              items={[
-                {
-                  value: "Masculino",
-                },
-                {
-                  value: "Femenino",
-                },
-              ]}
+              placeholder="Selecione o gênero"
+              items={[{ value: "Masculino" }, { value: "Feminino" }]}
             />
             {formState.errors.genero && (
               <span className="text-red-500 pt-1 text-xs">
@@ -132,33 +149,6 @@ export function ReusableStudentForm() {
               {formState.errors.dataNascimento && (
                 <span className="text-red-500 pt-1 text-xs">
                   {formState.errors.dataNascimento.message}
-                </span>
-              )}
-            </div>
-            <div className="flex flex-col w-full ml-1">
-              <label htmlFor="serie" className="mb-2 text-base">
-                Serie <span className="text-red-500">*</span>
-              </label>
-              <SelectOptions
-                onValueChange={(value) =>
-                  setValue("serie", value, { shouldValidate: true })
-                }
-                placeholder="Selecione o ano"
-                items={[
-                  {
-                    value: "Primeira",
-                  },
-                  {
-                    value: "Segunda",
-                  },
-                  {
-                    value: "Terceira",
-                  },
-                ]}
-              />
-              {formState.errors.serie && (
-                <span className="text-red-500 pt-1 text-xs">
-                  {formState.errors.serie.message}
                 </span>
               )}
             </div>

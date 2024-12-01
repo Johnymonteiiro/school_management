@@ -42,28 +42,39 @@ export default function Analytics() {
     setIsLoading(true);
 
     try {
-      startTransition(() => {
-        setMessages((prev) => [
-          ...prev,
-          {
-            message: `Identify At-Risk Students
-Use the assistant to analyze patterns in attendance, grades, and behavior to detect students who may be at risk of dropping out, enabling early intervention.
-
-Monitor Academic Performance
-Leverage the assistant to track key metrics like grades, participation, and presence, providing insights into students' academic progress over time.
-
-Support Decision-Making
-Aid school administrators in making informed decisions by presenting structured data analysis and suggesting tailored action plans to address challenges.
-
-Improve Resource Allocation
-Use insights from the assistant to prioritize resources and interventions for students or groups requiring immediate support.
-
-Facilitate Communication
-Share data-driven reports with teachers and parents to create collaborative strategies for improving student outcomes and reducing dropout rates.`,
-            sender: "bot",
-          },
-        ]);
+      const response = await fetch("http://127.0.0.1:5000/assistent/question", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ question: userMessage }),
       });
+
+      const data = await response.json();
+
+      const answer = data.result.assistent.answer;
+       const cleanMessage = answer.replace(/^```html|```$/g, "").trim();
+      if (cleanMessage) {
+        startTransition(() => {
+          setMessages((prev) => [
+            ...prev,
+            {
+              message: cleanMessage,
+              sender: "bot",
+            },
+          ]);
+        });
+      } else {
+        startTransition(() => {
+          setMessages((prev) => [
+            ...prev,
+            {
+              message: "Sorry, I couldn't understand your question.",
+              sender: "bot",
+            },
+          ]);
+        });
+      }
     } catch (error) {
       console.error("Error fetching AI response:", error);
       startTransition(() => {
@@ -126,7 +137,7 @@ Share data-driven reports with teachers and parents to create collaborative stra
                   }`}
                 >
                   <div
-                    className={`flex  gap-2 ${
+                    className={`flex gap-2 ${
                       m.sender === "user" ? "flex-row-reverse" : ""
                     }`}
                   >
@@ -150,7 +161,13 @@ Share data-driven reports with teachers and parents to create collaborative stra
                           : "bg-[#f8fdff] text-zinc-700"
                       }`}
                     >
-                      {m.message}
+                      {m.sender === "bot" ? (
+                        <div
+                          dangerouslySetInnerHTML={{ __html: m.message }}
+                        ></div>
+                      ) : (
+                        m.message
+                      )}
                     </div>
                   </div>
                 </div>
@@ -182,7 +199,6 @@ Share data-driven reports with teachers and parents to create collaborative stra
               >
                 <input
                   name="message"
-                  // rows={1}
                   className="flex-1 resize-none border-none shadow-none focus:ring-0 focus:outline-none overflow-hidden bg-gray-50 text-gray-700 px-3 py-2 rounded-lg"
                   placeholder="Type your question or request..."
                   onInput={(e) => {

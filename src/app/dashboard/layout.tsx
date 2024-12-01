@@ -25,10 +25,7 @@ export default function DashboardLayout({
 }>) {
   const pathname = usePathname();
 
-  // Split the pathname into segments and filter out empty strings
   const pathSegments = pathname?.split("/").filter(Boolean);
-
-  // Function to generate the full path for each breadcrumb
   const getLink = (index: number) => {
     return `/${pathSegments?.slice(0, index + 1).join("/")}`;
   };

@@ -1,9 +1,10 @@
 "use client";
 
-import { LibraryBig, UserPlus } from "lucide-react";
+import { LibraryBig } from "lucide-react";
 import { Modal } from "../../../components/modal";
 import { ReusableClassForm } from "./create-class";
 import TeachersTable from "./class-table";
+import { Button } from "@/components/ui/button";
 
 export default function Teachers() {
 
@@ -18,11 +19,12 @@ export default function Teachers() {
 
           <div className="flex items-center">
             <Modal
-              title="New Class"
-              button={{
-                icon: LibraryBig,
-                label: "New class",
-              }}
+              button={
+                <Button className="flex items-center ml-3 justify-between">
+                  <LibraryBig />
+                  <span>Add new class</span>
+                </Button>
+              }
             >
               <ReusableClassForm />
             </Modal>

@@ -3,7 +3,7 @@ import { useFormContext } from "react-hook-form";
 import { useHookFormMask } from "use-mask-input";
 
 type InputFieldProps = {
-  id: keyof StudentFormData;
+  id: string;
   label: string;
   placeholder: string;
   mask: string; 
@@ -12,7 +12,7 @@ type InputFieldProps = {
 type InputField = Omit<InputFieldProps, "mask">;
 
  export function InputField({ id, label, placeholder }: InputField) {
-   const { register, formState } = useFormContext<StudentFormData>();
+   const { register, formState } = useFormContext();
    const error = formState.errors[id];
 
    return (
@@ -29,14 +29,14 @@ type InputField = Omit<InputFieldProps, "mask">;
          }`}
        />
        {error && (
-         <span className="text-red-500 pt-1 text-xs">{error.message}</span>
+         <span className="text-red-500 pt-1 text-xs">{error.message as string}</span>
        )}
      </div>
    );
  }
 
  export function InputMask({ id, label, placeholder, mask }: InputFieldProps) {
-   const { register, formState } = useFormContext<StudentFormData>();
+   const { register, formState } = useFormContext();
    const registerWithMask = useHookFormMask(register);
    const error = formState.errors[id];
 
@@ -54,7 +54,7 @@ type InputField = Omit<InputFieldProps, "mask">;
          }`}
        />
        {error && (
-         <span className="text-red-500 pt-1 text-xs">{error.message}</span>
+         <span className="text-red-500 pt-1 text-xs">{error.message as string}</span>
        )}
      </div>
    );

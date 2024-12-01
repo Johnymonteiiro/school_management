@@ -1,28 +1,32 @@
 import { z } from "zod";
 
 export const classSchema = z.object({
-  nome: z
-    .string()
-    .min(3, "Nome é obrigatório e deve ter pelo menos 3 caracteres."),
-  cpf: z
-    .string()
-    .regex(
-      /^\d{3}\.\d{3}\.\d{3}-\d{2}$/,
-      "CPF inválido. Use o formato 000.000.000-00."
-    ),
-  dataNascimento: z
-    .date()
+  capacidade: z
+    .string({
+      required_error: "Capacidade é obrigatória.",
+    })
+    .transform((value) => Number(value))
+    .refine((value) => !isNaN(value), "Capacidade deve ser um número.")
+    .refine((value) => value >= 1, "Capacidade deve ser no mínimo 1."),
+  serie: z
+    .string({
+      required_error: "Série é obrigatória.",
+      invalid_type_error: "Série deve ser uma string.",
+    })
+    .min(1, "Série é obrigatória e não pode estar vazia."),
+  ano_letivo: z
+    .string({
+      required_error: "Ano letivo é obrigatório.",
+    })
+    .regex(/^\d{4}$/, "Ano letivo deve ser composto por 4 dígitos.")
     .refine(
-      (date) => date <= new Date(),
-      "Data de nascimento não pode ser no futuro."
+      (value) => Number(value) >= new Date().getFullYear(),
+      "Ano letivo deve ser igual ou posterior ao ano atual."
     ),
-  ano: z.string().min(1, "Ano é obrigatório."),
-  endereco: z.string().min(5, "Endereço é obrigatório."),
-  nomeResponsavel: z.string().min(3, "Nome do responsável é obrigatório."),
-  telefoneResponsavel: z
-    .string()
-    .regex(
-      /^\(\d{2}\) \d{4,5}-\d{4}$/,
-      "Telefone inválido. Use o formato (99) 99999-9999."
-    ),
+  semestre: z
+    .string({
+      required_error: "Semestre é obrigatório.",
+      invalid_type_error: "Semestre deve ser uma string.",
+    })
+    .min(1, "Semestre é obrigatório e não pode estar vazio."),
 });

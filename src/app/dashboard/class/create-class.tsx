@@ -6,12 +6,10 @@ import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { DialogClose } from "@/components/ui/dialog";
-import { DatePicker } from "@/components/calendar_data";
-import { InputField } from "@/components/inputField";
+import { InputField, InputMask } from "@/components/inputField";
 import { SelectOptions } from "@/components/select-item";
-import { format } from "date-fns";
 import { classSchema } from "./schemma.validate";
-import { toast } from "sonner";
+
 
 export type classFormData = z.infer<typeof classSchema>;
 
@@ -19,26 +17,17 @@ export function ReusableClassForm() {
   const methods = useForm<classFormData>({
     resolver: zodResolver(classSchema),
     defaultValues: {
-      nome: "",
-      cpf: "",
-      dataNascimento: undefined,
-      ano: "",
-      endereco: "",
-      nomeResponsavel: "",
-      telefoneResponsavel: "",
+      capacidade: 0,
+      serie: "",
+      ano_letivo:"",
+      semestre: "",
     },
   });
 
-  const { handleSubmit, watch, setValue, formState } = methods;
+  const { handleSubmit, setValue, formState } = methods;
 
   const handleFormSubmit = (data: classFormData) => {
-    const formattedData = {
-      dataNascimento: format(data.dataNascimento, "dd-MM-yyyy"),
-    };
-    console.log("Dados formatados enviados ao banco: ", formattedData);
-    methods.reset();
-
-    toast.success('New class created');
+ 
   };
 
   return (
@@ -46,77 +35,67 @@ export function ReusableClassForm() {
       <form onSubmit={handleSubmit(handleFormSubmit)}>
         <div className="grid grid-cols-2 gap-4 w-full items-center mb-10">
           <InputField
-            id="nome"
-            label="Nome do Estudante"
-            placeholder="Nome do Estudante"
+            id="capacidade"
+            label="Capacidade da turma"
+            placeholder="20"
           />
-          <InputField
-            id="cpf"
-            label="CPF"
-            placeholder="000.000.000-00"
-            mask="999.999.999-99"
+          <InputMask
+            id="ano_letivo"
+            label=" Ano letivo"
+            placeholder="2024"
+            mask="9999"
           />
           <div className="flex flex-col w-full mb-3">
-            <label htmlFor="dataNascimento" className="mb-2 text-base">
-              Data de Nascimento <span className="text-red-500">*</span>
+            <label htmlFor="ano" className="mb-2 text-base">
+              Serie <span className="text-red-500">*</span>
             </label>
-            <DatePicker
-              value={watch("dataNascimento")}
-              onChange={(selectedDate) =>
-                setValue("dataNascimento", selectedDate!, {
-                  shouldValidate: true,
-                })
+            <SelectOptions
+              onValueChange={(value) =>
+                setValue("serie", value, { shouldValidate: true })
               }
+              placeholder="Selecione o a serie"
+              items={[
+                {
+                  value: "Primeira",
+                },
+                {
+                  value: "Segunda",
+                },
+                {
+                  value: "Terceira",
+                },
+              ]}
             />
-            {formState.errors.dataNascimento && (
+            {formState.errors.serie && (
               <span className="text-red-500 pt-1 text-xs">
-                {formState.errors.dataNascimento.message}
+                {formState.errors.serie.message}
               </span>
             )}
           </div>
           <div className="flex flex-col w-full mb-3">
             <label htmlFor="ano" className="mb-2 text-base">
-              Ano <span className="text-red-500">*</span>
+              Semestre <span className="text-red-500">*</span>
             </label>
             <SelectOptions
               onValueChange={(value) =>
-                setValue("ano", value, { shouldValidate: true })
+                setValue("semestre", value, { shouldValidate: true })
               }
-              placeholder="Selecione o ano"
+              placeholder="Selecione o semestre"
               items={[
                 {
-                  value: "Primeiro ano",
+                  value: "Primeiro",
                 },
                 {
-                  value: "Segundo ano",
-                },
-                {
-                  value: "Terceiro ano",
+                  value: "Segundo",
                 },
               ]}
             />
-            {formState.errors.ano && (
+            {formState.errors.semestre && (
               <span className="text-red-500 pt-1 text-xs">
-                {formState.errors.ano.message}
+                {formState.errors.semestre.message}
               </span>
             )}
           </div>
-          <InputField
-            id="endereco"
-            label="Endereço"
-            placeholder="Endereço do Estudante"
-          />
-          <InputField
-            id="nomeResponsavel"
-            label="Nome do Responsável"
-            placeholder="Nome do Responsável"
-          />
-          <InputField
-            id="telefoneResponsavel"
-            label="Telefone do Responsável"
-            placeholder="(99) 99999-9999"
-            mask="(99) 99999-9999"
-          />
         </div>
         <div className="flex justify-end gap-2">
           <DialogClose className="px-4 py-2 text-sm font-medium text-zinc-100 bg-red-500 rounded-md">
