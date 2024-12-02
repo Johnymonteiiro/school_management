@@ -9,6 +9,9 @@ import { formSchema } from "./auth/login/page";
 import { StudentFormData } from "./dashboard/students/create-student";
 import { StudentFormData as EditForm } from "./dashboard/students/edit";
 import { classFormData } from "./dashboard/class/create-class";
+import { teacherFormData } from "./dashboard/teachers/create-teacher";
+import { ProfessorFormData } from "./dashboard/teachers/edit";
+import { DisciplinaFormData } from "./dashboard/subjects/create-suject";
 
 const testUser = {
   email: "johnDoe@gmail.com",
@@ -183,20 +186,181 @@ export async function GetProfile(path: string) {
   }
 }
 
+export async function GetData(path: string) {
+  try {
+    const url = `${env.NEXT_PUBLIC_BASE_URL}/${path}`;
+
+    const data = await fetch(url);
+    return data.json();
+  } catch (error) {
+    console.error("Error deleting student:", error);
+
+    return {
+      message: "An unexpected error occurred while deleting the student.",
+      status: 500,
+    };
+  }
+}
+
+export async function createteacher(formData: teacherFormData) {
+  try {
+    const { nome, cpf, genero, email, especialidade, endereco, telefone } =
+      formData;
+
+    const formattedData = {
+      nome,
+      cpf,
+      genero,
+      email,
+      especialidade,
+      endereco,
+      telefone,
+    };
+
+    const res = await fetch(`${env.NEXT_PUBLIC_BASE_URL}/professores`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formattedData),
+    });
+
+    if (!res.ok) {
+      const error = await res.json().catch(() => null);
+      return {
+        message: error?.message || "Erro ao criar professor",
+        status: res.status,
+      };
+    }
+
+    revalidatePath("dashboard/teachers");
+
+    return { message: "Professor criado com sucesso", status: 201 };
+  } catch (error) {
+    console.error("Erro ao criar professor:", error);
+
+    return {
+      message: "Ocorreu um erro inesperado ao criar o professor.",
+      status: 500,
+    };
+  }
+}
+
+export async function UpdateProfessor(
+  formData: ProfessorFormData,
+  id_professor: number
+) {
+  try {
+    const {
+      cpf,
+      endereco,
+      nome,
+      telefone,
+      genero,
+      status,
+      email,
+      especialidade,
+    } = formData;
+
+    const formattedData = {
+      cpf,
+      endereco,
+      telefone,
+      genero,
+      status,
+      email,
+      especialidade,
+    };
+
+    console.log("Form", formattedData);
+
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/professores/${id_professor}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nome,
+          ...formattedData,
+        }),
+      }
+    );
+
+    if (!res.ok) {
+      const error = await res.json().catch(() => null);
+      return {
+        message: error?.message || "Erro ao atualizar o professor.",
+        status: res.status,
+      };
+    }
+
+    revalidatePath("/dashboard/teachers");
+
+    return { message: "Professor atualizado com sucesso!", status: 201 };
+  } catch (error) {
+    console.error("Erro ao atualizar o professor:", error);
+
+    return {
+      message: "Ocorreu um erro inesperado ao atualizar o professor.",
+      status: 500,
+    };
+  }
+}
+
+export async function DeleteProfessor(path: string) {
+  try {
+    const url = `${process.env.NEXT_PUBLIC_BASE_URL}/${path}`;
+
+    const res = await fetch(url, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!res.ok) {
+      const error = await res.json().catch(() => null);
+      return {
+        message: error?.message || "Erro ao deletar o professor.",
+        status: res.status,
+      };
+    }
+
+    revalidatePath("/dashboard/teachers");
+
+    return { message: "Professor deletado com sucesso.", status: 200 };
+  } catch (error) {
+    console.error("Erro ao deletar o professor:", error);
+
+    return {
+      message: "Ocorreu um erro inesperado ao deletar o professor.",
+      status: 500,
+    };
+  }
+}
+
 export async function createClass(formData: classFormData) {
   try {
-    const { ano_letivo, capacidade, semestre, serie } = formData;
+    const { ano_letivo, capacidade, semestre, serie,id_disciplina,id_professor } = formData;
 
-    const res = await fetch(`${env.NEXT_PUBLIC_BASE_URL}/cadastrar_turma`, {
+    const newdata = {
+      serie,
+      ano_letivo,
+      semestre,
+      fk_professor: id_professor,
+      fk_disciplina:id_disciplina,
+    }
+
+    const res = await fetch(`${env.NEXT_PUBLIC_BASE_URL}/turmas`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        ano_letivo,
         capacidade,
-        semestre,
-        serie,
+        ...newdata
       }),
     });
 
@@ -216,6 +380,44 @@ export async function createClass(formData: classFormData) {
 
     return {
       message: "An unexpected error occurred while creating the student.",
+      status: 500,
+    };
+  }
+}
+
+export async function createDiscipline(formData: DisciplinaFormData) {
+  try {
+    const { nome, codigo, descricao, carga_horaria } = formData;
+
+    const res = await fetch(`${env.NEXT_PUBLIC_BASE_URL}/disciplinas`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        nome,
+        codigo,
+        descricao,
+        carga:carga_horaria,
+      }),
+    });
+
+    if (!res.ok) {
+      const error = await res.json().catch(() => null);
+      return {
+        message: error?.message || "Erro ao cadastrar a disciplina",
+        status: res.status,
+      };
+    }
+
+    revalidatePath("/dashboard/subject");
+
+    return { message: "Disciplina cadastrada com sucesso", status: 201 };
+  } catch (error) {
+    console.error("Erro ao cadastrar disciplina:", error);
+
+    return {
+      message: "Ocorreu um erro inesperado ao cadastrar a disciplina.",
       status: 500,
     };
   }

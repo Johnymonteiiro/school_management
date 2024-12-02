@@ -29,4 +29,16 @@ export const classSchema = z.object({
       invalid_type_error: "Semestre deve ser uma string.",
     })
     .min(1, "Semestre é obrigatório e não pode estar vazio."),
+  id_professor: z.string({
+      required_error: "Professor é obrigatória.",
+    })
+    .transform((value) => Number(value))
+    .refine((value) => !isNaN(value), "Pelo menos um professor.")
+    .refine((value) => value >= 1, "Pelo menos um professor."),
+  id_disciplina: z.string({
+      required_error: "Disciplina é obrigatória.",
+    })
+    .transform((value) => Number(value))
+    .refine((value) => !isNaN(value), "Pelo menos uma disciplina")
+    .refine((value) => value >= 1, "Pelo menos uma disciplina."),
 });

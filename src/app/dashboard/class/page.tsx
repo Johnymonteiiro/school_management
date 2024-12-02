@@ -1,12 +1,23 @@
-"use client";
-
 import { LibraryBig } from "lucide-react";
 import { Modal } from "../../../components/modal";
 import { ReusableClassForm } from "./create-class";
-import TeachersTable from "./class-table";
+import { TurmasTable } from "./class-table";
 import { Button } from "@/components/ui/button";
+import { env } from "@/env";
 
-export default function Teachers() {
+export interface TurmaType {
+  ano_letivo: number;
+  capacidade: number;
+  id_turma: number;
+  nome: string;
+  semestre: string;
+  serie: string;
+}
+
+export default async function Teachers() {
+  const data = await fetch(`${env.NEXT_PUBLIC_BASE_URL}/turmas`);
+
+  const class_data: TurmaType[] = await data.json();
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4">
@@ -31,7 +42,7 @@ export default function Teachers() {
           </div>
         </div>
 
-        <TeachersTable />
+        <TurmasTable turma_data={class_data} />
       </div>
     </div>
   );

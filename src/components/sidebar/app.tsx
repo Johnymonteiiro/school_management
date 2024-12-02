@@ -118,7 +118,7 @@ const data = {
       items: [
         {
           title: "Students analytics",
-          url: "#",
+          url: "/dashboard/reports",
         },
       ],
     },

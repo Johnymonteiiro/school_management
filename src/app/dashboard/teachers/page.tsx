@@ -1,11 +1,27 @@
-"use client";
 
-import { GraduationCap, UserPlus, Users } from "lucide-react";
+
+import { UserPlus, Users } from "lucide-react";
 import { Modal } from "../../../components/modal";
 import { ReusableTeacherForm } from "./create-teacher";
-import TeachersTable from "./teacher-table";
+import { TeachersTable } from "./teacher-table";
+import { Button } from "@/components/ui/button";
+import { env } from "@/env";
 
-export default function Teachers() {
+export type TeacherType = {
+  codigo: string;
+  email: string;
+  especialidade: string;
+  genero: "Masculino" | "Feminino" | "Outro"; 
+  id_professor: number;
+  nome: string;
+  status: "Ativo" | "Inativo";
+  telefone: string;
+};
+
+
+export default async function Teachers() {
+   const data = await fetch(`${env.NEXT_PUBLIC_BASE_URL}/professores`);
+   const teachers: TeacherType[] = await data.json();
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4">
@@ -19,17 +35,19 @@ export default function Teachers() {
           <div className="flex items-center">
             <Modal
               title="New Teacher"
-              button={{
-                icon: UserPlus,
-                label: "New Teacher",
-              }}
+              button={
+                <Button className="flex items-center ml-3 justify-between">
+                  <UserPlus />
+                  <span>New Teacher</span>
+                </Button>
+              }
             >
               <ReusableTeacherForm />
             </Modal>
           </div>
         </div>
 
-        <TeachersTable />
+        <TeachersTable teacher_data={teachers}  />
       </div>
     </div>
   );
