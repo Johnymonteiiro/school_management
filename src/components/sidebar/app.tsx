@@ -129,7 +129,7 @@ const data = {
       items: [
         {
           title: "General",
-          url: "#",
+          url: "http://localhost:3000/dashboard/connection",
         },
       ],
     },

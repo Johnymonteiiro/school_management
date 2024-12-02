@@ -43,7 +43,6 @@ const initialChartData: ChartData[] = [
   { disciplina: "Sociologia", nota: 7.2, media: 6.3 },
 ];
 
-// Configuração do gráfico
 const chartConfig: ChartConfig = {
   desktop: {
     label: "Desktop",
