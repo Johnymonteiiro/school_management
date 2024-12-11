@@ -1,36 +1,49 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Student Monitoring System
 
-## Getting Started
+The primary goal of this system is to monitor students' attendance, academic performance, behavior, and well-being. It aims to enhance school administration by facilitating communication between the educational institution and students' guardians.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Attendance Tracking**: Monitors and records students' attendance patterns.
+- **Academic Performance Analysis**: Provides insights into students' academic progress and identifies areas for improvement.
+- **Behavioral Monitoring**: Tracks students' behavioral patterns to address issues proactively.
+- **Well-being Assessments**: Evaluates and reports on the overall well-being of students.
+- **Enhanced Communication**: Facilitates efficient communication between schools and guardians.
+- **Safe Environment Promotion**: Ensures a secure and nurturing educational setting.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Benefits
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Improved Administration**: Streamlines processes and enhances school management efficiency.
+- **Proactive Interventions**: Identifies potential issues early to support students effectively.
+- **Holistic Development**: Focuses on students' overall growth and success.
+- **Quality Assurance**: Ensures a high standard of education through consistent monitoring.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Technologies
 
-## Learn More
+This system utilizes the following principal technologies:
 
-To learn more about Next.js, take a look at the following resources:
+- **Next.js**: For building a fast and scalable web application.
+- **React**: To create an interactive and dynamic user interface.
+- **Redux Toolkit**: For state management to ensure smooth data flow.
+- **React Hook Form**: For efficient and user-friendly form handling.
+- **Zod**: For schema validation and type safety.
+- **Radix UI**: To enhance the user interface with accessible components.
+- **Tailwind CSS**: For utility-first CSS styling.
+- **Date-fns**: For efficient date manipulation and formatting.
+- **Recharts**: For data visualization through intuitive charts.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Usage
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. **Data Integration**: Connect the system to the institution's database.
+2. **Monitor**: Use the dashboard to view and analyze attendance, performance, behavior, and well-being data.
+3. **Communicate**: Send alerts or updates to guardians as needed.
+4. **Reports**: Generate reports to aid decision-making and improve educational outcomes.
 
-## Deploy on Vercel
+## License
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+This project is licensed under the MIT License. See the `LICENSE` file for more details.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Contact
+
+For more information, support, or inquiries, please contact [johnymonteiiro@gmail.com].
+
