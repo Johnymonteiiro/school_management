@@ -56,8 +56,8 @@ export function ReusableClassForm() {
         const professoresRes = await GetData("professores");
 
         const profs = professoresRes
-          .filter((prof) => prof.id_professor) // Ignorar professores sem ID
-          .map((prof) => ({
+          .filter((prof:any) => prof.id_professor) // Ignorar professores sem ID
+          .map((prof:any) => ({
             nome: prof.nome,
             id: prof.id_professor,
           }));
@@ -67,8 +67,8 @@ export function ReusableClassForm() {
         const disciplinasRes = await GetData("disciplinas");
   
         const disc = disciplinasRes
-          .filter((disc) => disc.id_disciplina) // Ignorar disciplinas sem ID
-          .map((disc) => ({
+          .filter((disc : any) => disc.id_disciplina) // Ignorar disciplinas sem ID
+          .map((disc: any) => ({
             nome: disc.nome_disciplina,
             id_disciplina: disc.id_disciplina,
           }));
@@ -154,7 +154,7 @@ export function ReusableClassForm() {
           </div>
           <div className="flex items-center space-x-4">
             {/* Select para Professores */}
-            <Select onValueChange={(value) => setValue("id_professor", value)}>
+            <Select onValueChange={(value) => setValue("id_professor", Number(value))}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Selecione um professor" />
               </SelectTrigger>
@@ -172,9 +172,8 @@ export function ReusableClassForm() {
                 </SelectGroup>
               </SelectContent>
             </Select>
-
-            {/* Select para Disciplinas */}
-            <Select onValueChange={(value) => setValue("id_disciplina", value)}>
+            
+            <Select onValueChange={(value) => setValue("id_disciplina", Number(value))}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Selecione uma disciplina" />
               </SelectTrigger>

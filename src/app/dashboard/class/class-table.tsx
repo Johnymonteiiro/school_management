@@ -11,25 +11,35 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { MoreHorizontal, ArrowUpDown, Edit, Trash } from "lucide-react";
+import { MoreHorizontal, ArrowUpDown, Edit, Trash, LibraryBig } from "lucide-react";
 import { Modal } from "@/components/modal";
 import { TurmaType } from "./page";
-
+import { useRouter } from "next/navigation";
 
 export const TurmasTable = ({ turma_data }: { turma_data: TurmaType[] }) => {
   const [selectedId, setSelectedId] = useState<number | null>(null);
-  const [modalType, setModalType] = useState<"edit" | "delete" | null>(null);
+    const [name_class, setNameClass] = useState<string | null>(null);
+  const [modalType, setModalType] = useState<
+    "edit" | "delete" | "access" | null
+  >(null);
 
-  const openModal = (id: number, type: "edit" | "delete") => {
+  const openModal = (
+    id: number,
+    type: "edit" | "delete" | "access",
+    name?: string
+  ) => {
     console.log("Abrindo modal com ID:", id);
     setSelectedId(id);
     setModalType(type);
+    setNameClass(name!);
   };
 
   const closeModal = () => {
     setSelectedId(null);
     setModalType(null);
   };
+
+  const router = useRouter();
 
   const turmaColumns: ColumnDef<TurmaType>[] = [
     {
@@ -100,7 +110,20 @@ export const TurmasTable = ({ turma_data }: { turma_data: TurmaType[] }) => {
               className="flex justify-start w-full text-left"
             >
               <Edit className="stroke-green-500" />
-              <span>Editar</span>
+              <span>Edit class</span>
+            </Button>
+            <DropdownMenuSeparator />
+            <Button
+              onClick={() =>
+                router.push(
+                  `/dashboard/class/info/${row.original.id_turma}/${row.original.nome}`
+                )
+              }
+              variant="ghost"
+              className="flex justify-start w-full text-left"
+            >
+              <LibraryBig className="stroke-blue-500" />
+              <span>Access the class</span>
             </Button>
             <DropdownMenuSeparator />
             <Button
@@ -109,7 +132,7 @@ export const TurmasTable = ({ turma_data }: { turma_data: TurmaType[] }) => {
               className="flex justify-start w-full text-left"
             >
               <Trash className="stroke-red-500" />
-              <span>Excluir</span>
+              <span>Delete class</span>
             </Button>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -127,6 +150,16 @@ export const TurmasTable = ({ turma_data }: { turma_data: TurmaType[] }) => {
 
       {modalType === "edit" && selectedId !== null && (
         <Modal title="Editar Turma" isOpen={true} onClose={closeModal}>
+          <h1>Editar funcionalidade aqui</h1>
+        </Modal>
+      )}
+
+      {modalType === "access" && selectedId !== null && (
+        <Modal
+          title={`Turma: ${name_class}`}
+          isOpen={true}
+          onClose={closeModal}
+        >
           <h1>Editar funcionalidade aqui</h1>
         </Modal>
       )}

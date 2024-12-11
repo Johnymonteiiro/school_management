@@ -3,7 +3,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { DialogClose } from "@/components/ui/dialog";
-
 import { toast } from "sonner";
 import { CircleAlert } from "lucide-react";
 import { DeleteStudent } from "@/app/actions";

@@ -5,7 +5,7 @@ import { format } from "date-fns";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { z } from "zod";
-import { formSchema } from "./auth/login/page";
+import { FormData } from "./auth/login/page";
 import { StudentFormData } from "./dashboard/students/create-student";
 import { StudentFormData as EditForm } from "./dashboard/students/edit";
 import { classFormData } from "./dashboard/class/create-class";
@@ -18,7 +18,7 @@ const testUser = {
   password: "12345678",
 };
 
-export const Signup = async (value: z.infer<typeof formSchema>) => {
+export const Signup = async (value: FormData) => {
   const { email, password } = value;
   const cookieStore = await cookies();
 
@@ -92,6 +92,7 @@ export async function UpdateStudent(formData: EditForm, id_aluno: number) {
       dataNascimento,
       endereco,
       nome,
+      status,
       nomeResponsavel,
       telefoneResponsavel,
       genero,
@@ -102,6 +103,7 @@ export async function UpdateStudent(formData: EditForm, id_aluno: number) {
       genero,
       cpf,
       endereco,
+      status,
       nome_responsavel: nomeResponsavel,
       telefone_responsavel: telefoneResponsavel,
     };
@@ -418,6 +420,41 @@ export async function createDiscipline(formData: DisciplinaFormData) {
 
     return {
       message: "Ocorreu um erro inesperado ao cadastrar a disciplina.",
+      status: 500,
+    };
+  }
+}
+
+export async function addStudentClass(id_aluno: number, id_turma:number) {
+  try {
+    
+     const res = await fetch(`${env.NEXT_PUBLIC_BASE_URL}/cadastrar_aluno_turma`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id_aluno,
+        id_turma,
+      }),
+    });
+    
+    if (!res.ok) {
+      const error = await res.json().catch(() => null);
+      return {
+        message: error?.message || "Error adding new student to this class",
+        status: 201,
+      };
+    }
+
+    revalidatePath("/dashboard/class/info");
+
+    return { message: "Student add", status: 201 };
+  } catch (error) {
+    console.error("Error add student:", error);
+
+    return {
+      message: "An unexpected error occurred while creating the student.",
       status: 500,
     };
   }

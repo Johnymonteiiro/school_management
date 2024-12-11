@@ -12,10 +12,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal, ArrowUpDown, Edit, Trash } from "lucide-react";
-import { Modal } from "@/components/modal";
 import { DisciplinaType } from "./page";
-// import { DeleteForm } from "./delete";
-// import { EditDisciplinaForm } from "./edit";
+
 
 export const DisciplinasTable = ({
   disciplina_data,
@@ -29,11 +27,6 @@ export const DisciplinasTable = ({
     console.log("Abrindo modal com ID:", id);
     setSelectedId(id);
     setModalType(type);
-  };
-
-  const closeModal = () => {
-    setSelectedId(null);
-    setModalType(null);
   };
 
   const disciplinaColumns: ColumnDef<DisciplinaType>[] = [

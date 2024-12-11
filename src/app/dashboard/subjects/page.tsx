@@ -5,6 +5,7 @@ import { ReusableDisciplinaForm } from "./create-suject";
 import { DisciplinasTable  } from "./subjects-table";
 import { Button } from "@/components/ui/button";
 import { env } from "@/env";
+import { Disciplina } from "../class/info/[...slug]/page";
 
 export type DisciplinaType = {
   carga_horaria: number;
@@ -19,7 +20,7 @@ export default async function Subjects() {
 
   const subject = await data.json();
 
-    const renamedSubjects: DisciplinaType[] = subject.map((item) => ({
+    const renamedSubjects: DisciplinaType[] = subject.map((item : Disciplina) => ({
       ...item,
       nome: item.nome_disciplina,
     }));

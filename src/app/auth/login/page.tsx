@@ -26,7 +26,8 @@ import { Input } from "@/components/ui/input";
 import { Signup } from "@/app/actions";
 import { useRouter } from "next/navigation";
 
-export const formSchema = z.object({
+// Define explicit type for `formSchema`
+const formSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
   password: z
     .string()
@@ -34,8 +35,11 @@ export const formSchema = z.object({
     .regex(/[a-zA-Z0-9]/, { message: "Password must be alphanumeric" }),
 });
 
+// Explicitly infer the type for form data
+export type FormData = z.infer<typeof formSchema>;
+
 export default function Login() {
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
@@ -45,7 +49,7 @@ export default function Login() {
 
   const router = useRouter();
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: FormData) {
     const isNotAuthenticated = await Signup(values);
 
     if (isNotAuthenticated) {

@@ -127,93 +127,98 @@ export default function Analytics() {
               </div>
             </div>
           </div>
-          <div className="rounded px-4 pt-10 border w-[600px] h-[700px] box-border relative flex flex-col bg-white">
-            <div className="flex-1 overflow-y-auto space-y-6 p-4">
-              {messages?.map((m, i) => (
-                <div
-                  key={i}
-                  className={`flex ${
-                    m.sender === "user" ? "justify-end" : "justify-start"
-                  }`}
-                >
+
+          <div className="flex flex-col rounded px-4 pt-10 border w-[600px] h-[700px] box-border relative bg-white">
+            <div className=" h-[700px] w-full overflow-y-auto">
+              <div className="flex-1 overflow-y-auto space-y-6 p-4">
+                {messages?.map((m, i) => (
                   <div
-                    className={`flex gap-2 ${
-                      m.sender === "user" ? "flex-row-reverse" : ""
+                    key={i}
+                    className={`flex ${
+                      m.sender === "user" ? "justify-end" : "justify-start"
                     }`}
                   >
-                    {m.sender === "bot" ? (
-                      <div>
-                        <div className="flex items-center border p-1 bg-blue-500 shadow-2xl justify-center rounded-full">
-                          <Bot size={30} className="stroke-zinc-100" />
-                        </div>
-                      </div>
-                    ) : (
-                      <div>
-                        <div className="flex items-center border p-1 bg-zinc-800 shadow-2xl justify-center rounded-full">
-                          <User size={30} className="stroke-zinc-100" />
-                        </div>
-                      </div>
-                    )}
                     <div
-                      className={`px-4 py-2 rounded-lg shadow max-w-[100%] ${
-                        m.sender === "user"
-                          ? "bg-gray-200 text-gray-700"
-                          : "bg-[#f8fdff] text-zinc-700"
+                      className={`flex gap-2 ${
+                        m.sender === "user" ? "flex-row-reverse" : ""
                       }`}
                     >
                       {m.sender === "bot" ? (
-                        <div
-                          dangerouslySetInnerHTML={{ __html: m.message }}
-                        ></div>
+                        <div>
+                          <div className="flex items-center border p-1 bg-blue-500 shadow-2xl justify-center rounded-full">
+                            <Bot size={30} className="stroke-zinc-100" />
+                          </div>
+                        </div>
                       ) : (
-                        m.message
+                        <div>
+                          <div className="flex items-center border p-1 bg-zinc-800 shadow-2xl justify-center rounded-full">
+                            <User size={30} className="stroke-zinc-100" />
+                          </div>
+                        </div>
                       )}
+                      <div
+                        className={`px-4 py-2 rounded-lg shadow max-w-[100%] ${
+                          m.sender === "user"
+                            ? "bg-gray-200 text-gray-700"
+                            : "bg-[#f8fdff] text-zinc-700"
+                        }`}
+                      >
+                        {m.sender === "bot" ? (
+                          <div
+                            dangerouslySetInnerHTML={{ __html: m.message }}
+                          ></div>
+                        ) : (
+                          m.message
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-              {isLoading && (
-                <div className="flex justify-start">
-                  <div className="mr-2">
-                    <div className="flex items-center border p-1 bg-blue-500 shadow-2xl justify-center rounded-full">
-                      <Bot size={30} className="stroke-zinc-100" />
+                ))}
+                {isLoading && (
+                  <div className="flex justify-start">
+                    <div className="mr-2">
+                      <div className="flex items-center border p-1 bg-blue-500 shadow-2xl justify-center rounded-full">
+                        <Bot size={30} className="stroke-zinc-100" />
+                      </div>
                     </div>
+                    <p className="px-4 py-2 rounded-lg shadow-sm bg-blue-50 text-blue-800">
+                      Loading...
+                    </p>
                   </div>
-                  <p className="px-4 py-2 rounded-lg shadow-sm bg-blue-50 text-blue-800">
-                    Loading...
-                  </p>
-                </div>
-              )}
-              <div ref={chatEndRef}></div>
+                )}
+                <div ref={chatEndRef}></div>
+              </div>
             </div>
 
-            <div className="absolute bottom-4 left-4 right-4">
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  const formData = new FormData(e.currentTarget);
-                  handleUserMessage(formData);
-                  e.currentTarget.reset();
-                }}
-                className="flex items-center gap-2 w-full bg-gray-50 p-2 rounded-lg shadow-md"
-              >
-                <input
-                  name="message"
-                  className="flex-1 resize-none border-none shadow-none focus:ring-0 focus:outline-none overflow-hidden bg-gray-50 text-gray-700 px-3 py-2 rounded-lg"
-                  placeholder="Type your question or request..."
-                  onInput={(e) => {
-                    const target = e.target as HTMLTextAreaElement;
-                    target.style.height = "auto";
-                    target.style.height = target.scrollHeight + "px";
+            <div>
+              <div className="pb-2">
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    const formData = new FormData(e.currentTarget);
+                    handleUserMessage(formData);
+                    e.currentTarget.reset();
                   }}
-                />
-                <Button
-                  type="submit"
-                  className="p-2 bg-blue-500 hover:bg-blue-600 text-white rounded-full"
+                  className="flex items-center gap-2 w-full bg-gray-50 p-2 rounded-lg shadow-md"
                 >
-                  <ArrowUp />
-                </Button>
-              </form>
+                  <input
+                    name="message"
+                    className="flex-1 resize-none border-none shadow-none focus:ring-0 focus:outline-none overflow-hidden bg-gray-50 text-gray-700 px-3 py-2 rounded-lg"
+                    placeholder="Type your question or request..."
+                    onInput={(e) => {
+                      const target = e.target as HTMLTextAreaElement;
+                      target.style.height = "auto";
+                      target.style.height = target.scrollHeight + "px";
+                    }}
+                  />
+                  <Button
+                    type="submit"
+                    className="p-2 bg-blue-500 hover:bg-blue-600 text-white rounded-full"
+                  >
+                    <ArrowUp />
+                  </Button>
+                </form>
+              </div>
             </div>
           </div>
         </div>

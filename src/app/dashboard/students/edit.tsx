@@ -13,31 +13,32 @@ import {  GetProfile, UpdateStudent } from "@/app/actions";
 import { toast } from "sonner";
 
  const studentSchema = z.object({
-  nome: z
-    .string()
-    .min(3, "Nome é obrigatório e deve ter pelo menos 3 caracteres."),
-  genero: z.string().min(1, "O gênero é obrigatório."),
-  cpf: z
-    .string()
-    .regex(
-      /^\d{3}\.\d{3}\.\d{3}-\d{2}$/,
-      "CPF inválido. Use o formato 000.000.000-00."
-    ),
-  dataNascimento: z
-    .date()
-    .refine(
-      (date) => date <= new Date(),
-      "Data de nascimento não pode ser no futuro."
-    ),
-  endereco: z.string().min(5, "Endereço é obrigatório."),
-  nomeResponsavel: z.string().min(3, "Nome do responsável é obrigatório."),
-  telefoneResponsavel: z
-    .string()
-    .regex(
-      /^\(\d{2}\) \d{4,5}-\d{4}$/,
-      "Telefone inválido. Use o formato (99) 99999-9999."
-    ),
-});
+   nome: z
+     .string()
+     .min(3, "Nome é obrigatório e deve ter pelo menos 3 caracteres."),
+   genero: z.string().min(1, "O gênero é obrigatório."),
+   cpf: z
+     .string()
+     .regex(
+       /^\d{3}\.\d{3}\.\d{3}-\d{2}$/,
+       "CPF inválido. Use o formato 000.000.000-00."
+     ),
+   dataNascimento: z
+     .date()
+     .refine(
+       (date) => date <= new Date(),
+       "Data de nascimento não pode ser no futuro."
+     ),
+   endereco: z.string().min(5, "Endereço é obrigatório."),
+   status: z.string().min(5, "O status é obrigatório."),
+   nomeResponsavel: z.string().min(3, "Nome do responsável é obrigatório."),
+   telefoneResponsavel: z
+     .string()
+     .regex(
+       /^\(\d{2}\) \d{4,5}-\d{4}$/,
+       "Telefone inválido. Use o formato (99) 99999-9999."
+     ),
+ });
 
 export type StudentFormData = z.infer<typeof studentSchema>;
 
@@ -49,6 +50,7 @@ type ResponseData = {
   nome: string;
   nome_responsavel: string;
   telefone_responsavel: string;
+  status:string;
 };
 
 export function EditStudentForm({ id_aluno }: { id_aluno: number }) {
@@ -65,6 +67,7 @@ export function EditStudentForm({ id_aluno }: { id_aluno: number }) {
         endereco: data.endereco,
         nomeResponsavel: data.nome_responsavel,
         telefoneResponsavel: data.telefone_responsavel,
+        status: data.status,
       });
     }
     fetchData();
@@ -152,6 +155,23 @@ export function EditStudentForm({ id_aluno }: { id_aluno: number }) {
                 </span>
               )}
             </div>
+          </div>
+          <div className="flex flex-col w-full ml-1">
+            <label htmlFor="status" className="mb-2 text-base">
+              Status <span className="text-red-500">*</span>
+            </label>
+            <SelectOptions
+              onValueChange={(value) =>
+                setValue("status", value, { shouldValidate: true })
+              }
+              placeholder="Selecione o status"
+              items={[{ value: "Ativo" }, { value: "Inativo" }]}
+            />
+            {formState.errors.status && (
+              <span className="text-red-500 pt-1 text-xs">
+                {formState.errors.status.message}
+              </span>
+            )}
           </div>
           <InputField
             id="endereco"

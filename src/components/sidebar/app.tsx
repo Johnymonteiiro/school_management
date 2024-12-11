@@ -117,9 +117,13 @@ const data = {
       icon: ChartArea,
       items: [
         {
-          title: "Students analytics",
-          url: "/dashboard/reports",
+          title: "Gender Class",
+          url: "/dashboard/reports/gender",
         },
+        {
+          title: "Student Class",
+          url: "/dashboard/reports/student",
+        }
       ],
     },
     {
@@ -128,8 +132,8 @@ const data = {
       icon: Settings2,
       items: [
         {
-          title: "General",
-          url: "http://localhost:3000/dashboard/connection",
+          title: "Connection",
+          url: "/dashboard/connection",
         },
       ],
     },
