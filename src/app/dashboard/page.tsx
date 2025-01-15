@@ -3,38 +3,47 @@ import DashboardCards from "./card";
 import { Suspense } from "react";
 
 async function fetchData(url: string) {
-  await new Promise((resolve) => setTimeout(resolve, 5000));
-
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`Erro ao buscar dados de ${url}`);
-  return res.json();
+  try {
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+    const res = await fetch(url);
+    if (!res.ok) {
+      throw new Error(`Erro ao buscar dados de ${url}`);
+    }
+    return res.json();
+  } catch (error) {
+    console.error("Error fetching dashboard:", error);
+  }
 }
 
 export default async function Home() {
-  const [students, subjects, teachers, classes] = await Promise.all([
-    fetchData(`${env.NEXT_PUBLIC_BASE_URL}/alunos`),
-    fetchData(`${env.NEXT_PUBLIC_BASE_URL}/disciplinas`),
-    fetchData(`${env.NEXT_PUBLIC_BASE_URL}/professores`),
-    fetchData(`${env.NEXT_PUBLIC_BASE_URL}/turmas`),
-  ]);
+  // const [students, subjects, teachers, classes] = await Promise.all([
+  //   fetchData(`${env.NEXT_PUBLIC_BASE_URL}/alunos`),
+  //   fetchData(`${env.NEXT_PUBLIC_BASE_URL}/disciplinas`),
+  //   fetchData(`${env.NEXT_PUBLIC_BASE_URL}/professores`),
+  //   fetchData(`${env.NEXT_PUBLIC_BASE_URL}/turmas`),
+  // ]);
 
   const data = [
     {
       title: "Estudantes",
-      value: students.length || 0,
+      value: 0, //students?.length || 0,
       date: "Atualizado hoje",
     },
     {
       title: "Disciplinas",
-      value: subjects.length || 0,
+      value: 0, // subjects?.length || 0,
       date: "Atualizado hoje",
     },
     {
       title: "Professores",
-      value: teachers.length || 0,
+      value: 0, // teachers?.length || 0,
       date: "Atualizado hoje",
     },
-    { title: "Turmas", value: classes.length || 0, date: "Atualizado hoje" },
+    {
+      title: "Turmas",
+      value: 0, // classes?.length || 0,
+      date: "Atualizado hoje",
+    },
   ];
 
   return (

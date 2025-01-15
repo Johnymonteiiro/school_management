@@ -1,8 +1,7 @@
-
 import { Book } from "lucide-react";
 import { Modal } from "../../../components/modal";
 import { ReusableDisciplinaForm } from "./create-suject";
-import { DisciplinasTable  } from "./subjects-table";
+import { DisciplinasTable } from "./subjects-table";
 import { Button } from "@/components/ui/button";
 import { env } from "@/env";
 import { Disciplina } from "../class/info/[...slug]/page";
@@ -15,15 +14,27 @@ export type DisciplinaType = {
   nome: string;
 };
 
+const getSubjects = async () => {
+  try {
+    const response = await fetch(`${env.NEXT_PUBLIC_BASE_URL}/disciplinas`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch: ${response.statusText}`);
+    }
+    return response;
+  } catch (error) {
+    console.error("Error fetching subjects:", error);
+  }
+};
+
 export default async function Subjects() {
-  const data = await fetch(`${env.NEXT_PUBLIC_BASE_URL}/disciplinas`);
+  const data = await getSubjects();
 
-  const subject = await data.json();
+  const subject = data ? await data.json() : [];
 
-    const renamedSubjects: DisciplinaType[] = subject.map((item : Disciplina) => ({
-      ...item,
-      nome: item.nome_disciplina,
-    }));
+  const renamedSubjects: DisciplinaType[] = subject.map((item: Disciplina) => ({
+    ...item,
+    nome: item.nome_disciplina,
+  }));
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4">

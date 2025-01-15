@@ -1,5 +1,3 @@
-
-
 import { UserPlus, Users } from "lucide-react";
 import { Modal } from "../../../components/modal";
 import { ReusableTeacherForm } from "./create-teacher";
@@ -11,17 +9,28 @@ export type TeacherType = {
   codigo: string;
   email: string;
   especialidade: string;
-  genero: "Masculino" | "Feminino" | "Outro"; 
+  genero: "Masculino" | "Feminino" | "Outro";
   id_professor: number;
   nome: string;
   status: "Ativo" | "Inativo";
   telefone: string;
 };
 
+const getTeachers = async () => {
+  try {
+    const response = await fetch(`${env.NEXT_PUBLIC_BASE_URL}/professores`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch: ${response.statusText}`);
+    }
+    return response;
+  } catch (error) {
+    console.error("Error fetching subjects:", error);
+  }
+};
 
 export default async function Teachers() {
-   const data = await fetch(`${env.NEXT_PUBLIC_BASE_URL}/professores`);
-   const teachers: TeacherType[] = await data.json();
+  const data = await getTeachers();
+  const teachers: TeacherType[] = data ? await data.json() : [];
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4">
@@ -47,7 +56,7 @@ export default async function Teachers() {
           </div>
         </div>
 
-        <TeachersTable teacher_data={teachers}  />
+        <TeachersTable teacher_data={teachers} />
       </div>
     </div>
   );

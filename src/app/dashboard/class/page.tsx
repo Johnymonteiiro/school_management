@@ -14,10 +14,22 @@ export interface TurmaType {
   serie: string;
 }
 
-export default async function Teachers() {
-  const data = await fetch(`${env.NEXT_PUBLIC_BASE_URL}/turmas`);
+const getClasses = async () => {
+  try {
+    const response = await fetch(`${env.NEXT_PUBLIC_BASE_URL}/turmas`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch: ${response.statusText}`);
+    }
+    return response;
+  } catch (error) {
+    console.error("Error fetching subjects:", error);
+  }
+};
 
-  const class_data: TurmaType[] = await data.json();
+export default async function Teachers() {
+  const data = await getClasses();
+
+  const class_data: TurmaType[] = data ? await data.json() : [];
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4">

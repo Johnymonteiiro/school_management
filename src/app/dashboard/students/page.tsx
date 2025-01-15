@@ -14,9 +14,22 @@ export type StudentsTypes = {
   status: string;
 };
 
+const getStudents = async () => {
+  try {
+    const response = await fetch(`${env.NEXT_PUBLIC_BASE_URL}/alunos`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch: ${response.statusText}`);
+    }
+    return response;
+  } catch (error) {
+    console.error("Error fetching subjects:", error);
+  }
+};
+
 export default async function Students() {
-  const data = await fetch(`${env.NEXT_PUBLIC_BASE_URL}/alunos`);
-  const student: StudentsTypes[] = await data.json();
+  
+  const data = await getStudents();
+  const student: StudentsTypes[] = data ? await data.json() : [];
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4">
